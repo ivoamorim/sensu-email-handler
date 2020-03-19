@@ -80,6 +80,7 @@ var (
 	emailConfigOptions = []*sensu.PluginConfigOption{
 		{
 			Path:      smtpHost,
+			ENV:       "SMTP_HOST",
 			Argument:  smtpHost,
 			Shorthand: "s",
 			Default:   "",
@@ -106,6 +107,7 @@ var (
 		},
 		{
 			Path:      smtpPort,
+			ENV:       "SMTP_PORT",
 			Argument:  smtpPort,
 			Shorthand: "P",
 			Default:   uint64(defaultSmtpPort),
@@ -114,6 +116,7 @@ var (
 		},
 		{
 			Path:      toEmail,
+			ENV:       "TO_EMAIL",
 			Argument:  toEmail,
 			Shorthand: "t",
 			Default:   "",
@@ -122,6 +125,7 @@ var (
 		},
 		{
 			Path:      fromEmail,
+			ENV:       "FROM_EMAIL",
 			Argument:  fromEmail,
 			Shorthand: "f",
 			Default:   "",
@@ -164,7 +168,7 @@ var (
 			Path:      subjectTemplate,
 			Argument:  subjectTemplate,
 			Shorthand: "S",
-			Default:   "Sensu Alert - {{.Entity.Name}}/{{.Check.Name}}: {{.Check.State}}",
+			Default:   "Sensu {{if eq .Check.Status 0}}OK{{else if eq .Check.Status 1}}WARNING{{else if eq .Check.Status 2}}CRITICAL{{else}}UNKNOWN{{end}} - {{.Entity.Name}}/{{.Check.Name}}: {{.Check.State}}",
 			Usage:     "A template to use for the subject",
 			Value:     &config.SubjectTemplate,
 		},
